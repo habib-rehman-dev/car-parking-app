@@ -1,0 +1,1 @@
+export {authLimiter} from '../config/rateLimit.js'
