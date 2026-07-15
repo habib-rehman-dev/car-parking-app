@@ -1,8 +1,8 @@
-import * as vheicleService from "../services/vheicle.service.js";
+import * as vehicleService from "../services/vehicle.service.js";
 
 export async function checkIn(req, res, next) {
   try {
-    let result = await vheicleService.checkin(req.body);
+    let result = await vehicleService.checkin(req.body);
 
     res.json(result);
   } catch (err) {
@@ -11,7 +11,7 @@ export async function checkIn(req, res, next) {
 }
 export async function checkOut(req, res, next) {
   try {
-    let result = await vheicleService.checkOut(req.body);
+    let result = await vehicleService.checkOut(req.body);
 
     res.json(result);
   } catch (err) {
@@ -27,7 +27,7 @@ export async function search(req, res, next) {
     if (!licencePlate) {
       throw new Error("Licence Plate is Required.");
     }
-    let result = await vheicleService.search({licencePlate});
+    let result = await vehicleService.search({licencePlate});
 
     res.json(result);
   } catch (err) {

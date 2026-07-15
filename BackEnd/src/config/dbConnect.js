@@ -2,19 +2,23 @@ import mongoose from "mongoose";
 
 async function connectDB() {
   try {
-    // Ensure the URI exists before trying to connect
-    if (!process.env.MONGODB_URI) {
-      throw new Error("MONGODB_URI is not defined in your environment variables!");
+    const mongoUri = process.env.MONGO_URI;
+
+    if (!mongoUri) {
+      throw new Error("MONGO_URI is not defined in your environment variables!");
     }
 
-    await mongoose.connect(process.env.MONGODB_URI, {
-      dbName: "Parking" // Cleanly targets the 'Parking' database
+    await mongoose.connect(mongoUri, {
+      dbName: "Parking",
+      serverSelectionTimeoutMS: 10000,
     });
-    
-    console.log(`MongoDB connected\n\n\n`);
+
+    console.log("\n\n\n\nMongoDB connected successfully.");
   } catch (error) {
-    console.log(`connection failed ${error}`);
+    console.error("MongoDB connection failed:", error.message);
+    // Throwing the error ensures server.js can catch it and handle it (or crash gracefully)
+    throw error; 
   }
 }
-   
+
 export default connectDB;

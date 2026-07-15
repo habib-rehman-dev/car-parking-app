@@ -4,8 +4,8 @@ let ParkingSessionSchema = mongoose.Schema(
   {
     vehicleId: {
       type: mongoose.Schema.ObjectId,
-      ref: "Vheicle",
-      required: [true, "Vhicle is not Specify"],
+      ref: "Vehicle", // Note: Fixed typo "vehicle" to "Vehicle"
+      required: [true, "Vehicle is not specified"],
     },
     entryTime: {
       type: Date,
@@ -14,7 +14,7 @@ let ParkingSessionSchema = mongoose.Schema(
     },
     exitTime: {
       type: Date,
-      default: null, // here if i am put the data.now then i will be have the data
+      default: null,
     },
     fee: {
       type: Number,
@@ -28,9 +28,18 @@ let ParkingSessionSchema = mongoose.Schema(
   },
   {
     timestamps: true,
-  },
+  }
+);
+
+// --- THE FIX: PARTIAL UNIQUE INDEX ---
+// This ensures a vehicleId can only have ONE document where status is "parked"
+ParkingSessionSchema.index(
+  { vehicleId: 1 },
+  { 
+    unique: true, 
+    partialFilterExpression: { status: "parked" } 
+  }
 );
 
 let ParkingSession = mongoose.model("ParkingSession", ParkingSessionSchema);
-
-export default ParkingSession;
+export default ParkingSession;   

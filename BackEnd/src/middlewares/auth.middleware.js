@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import {AuthenticationError} from '../utils/errors.js'
 
 export default function protect(req, res, next){
     try{
@@ -6,10 +7,14 @@ export default function protect(req, res, next){
         let token = req.cookies.token
         // console.log('hi habibi this is the token ' + token)
         if(!token) {
-            return res.status(401).json({message : 'unautorized' , success: false})
+            throw new AuthenticationError('unauthorized')
         }
-        req.user = jwt.verify(token , process.env.JWT_SECRET)
-        // console.log(req.user)
+        let decode = jwt.verify(token , process.env.JWT_SECRET)
+        if(!decode){
+            throw new AuthenticationError('Wrong token for authenticaiton')
+        }
+        req.user = decode
+      
         next()
     }
     catch(err){

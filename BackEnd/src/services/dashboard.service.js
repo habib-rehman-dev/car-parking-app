@@ -16,8 +16,8 @@ export async function getStats() {
     status: "parked",
   });
 
-  // total vheicle in the system
-  let totalVheicles = await Vehicle.countDocuments();
+  // total vehicle in the system
+  let totalvehicles = await Vehicle.countDocuments();
 
   // today checkins
   let todayCheckins = await ParkingSession.find({
@@ -36,9 +36,9 @@ export async function getStats() {
 
   let accopyBYType = await parkdedSessions.reduce(
     (acc, session) => {
-      let vheicle = session.vehicleId;
-      if (vheicle.type && vheicle) {
-        acc[vheicle.type] = (acc[vheicle.type] || 0) + 1;
+      let vehicle = session.vehicleId;
+      if (vehicle.type && vehicle) {
+        acc[vehicle.type] = (acc[vehicle.type] || 0) + 1;
       }
       return acc;
     },
@@ -50,7 +50,7 @@ export async function getStats() {
   return {
     currentlyparked,
     todayCheckouts,
-    totalVheicles,
+    totalvehicles,
     todayCheckins,
     accopyBYType,
   };

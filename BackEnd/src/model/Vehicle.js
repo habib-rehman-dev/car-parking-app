@@ -21,7 +21,7 @@ let VehicleSchema = mongoose.Schema(
       trim: true,
     },
     phone: {
-      type: Number,
+      type: String,
       required: [true, "Phone Number is must"],
       match: [/^\d{11}$/, "Please Enter the valid Email Addresss"],
     },
@@ -31,6 +31,6 @@ let VehicleSchema = mongoose.Schema(
   },
 );
 
-let Vehicle = mongoose.model("Vheicle", VehicleSchema);
+let Vehicle = mongoose.model("vehicle", VehicleSchema);
 
 export default Vehicle;

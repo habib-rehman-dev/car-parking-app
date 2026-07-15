@@ -19,7 +19,7 @@ export async function getAllParked(req, res, next) {
   try {
     let parked = await dashboardService.getAllParked()
      if(!parked){
-        throw new Error('Error while geting parked vheicles')
+        throw new Error('Error while geting parked vehicles')
     }
     res.json( {success: true,
         message: 'Parked vhecel got successfull',

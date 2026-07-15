@@ -1,23 +1,23 @@
 import Router from "express";
-import * as vheicle from "../controllers/vhicle.controller.js";
-import * as validators from "../validator/vheicle.validator.js";
+import * as vehicle from "../controllers/vhicle.controller.js";
+import * as validators from "../validator/vehicle.validator.js";
 import { expressValidator } from "../middlewares/validate.middleware.js";
 
-let vheicleRoutes = Router();
+let vehicleRoutes = Router();
 
-vheicleRoutes.post(
+vehicleRoutes.post(
   "/checkin",
   validators.chekIn,
   expressValidator,
-  vheicle.checkIn,
+  vehicle.checkIn,
 );
-vheicleRoutes.put(
+vehicleRoutes.put(
   "/checkout",
- vheicle.checkOut
+ vehicle.checkOut
 );
-vheicleRoutes.get(
+vehicleRoutes.get(
   "/search/:licencePlate",
- vheicle.search
+ vehicle.search
 );
 
-export default vheicleRoutes;
+export default vehicleRoutes;

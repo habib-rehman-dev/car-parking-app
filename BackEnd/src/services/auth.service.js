@@ -1,15 +1,13 @@
 import jwt from "jsonwebtoken";
 import User from "../model/User.model.js";
-
-// rule for service => service should never touch the http
+import { ApiError, AuthenticationError } from "../utils/errors.js";
 
 export async function login({ email, password }) {
   let isExist = await User.findOne({ email });
   if (!isExist || (await isExist.matchpassword(password)) === false) {
-    throw new Error("Invalid Credentials");
-    // throw new ApiError("Invalid Credentials");
+    throw new AuthenticationError("Invalid Credentials");
   }
-  console.log(isExist);
+
   let token = jwt.sign(
     { _id: isExist._id, email: isExist.email },
     process.env.JWT_SECRET,
@@ -31,8 +29,8 @@ export async function login({ email, password }) {
 export async function register({ email, password, role }) {
   let isExist = await User.findOne({ email });
 
-  if (isExist) throw new Error("user is already exist with the same email");
-
+  if (isExist)
+    throw new ApiError("user is already exist with the same email" , 409 , "USER_ALREADY_EXIST");
   let user = await User.create({
     email: email,
     password: password,
@@ -45,4 +43,3 @@ export async function register({ email, password, role }) {
     success: true,
   };
 }
-
