@@ -62,45 +62,70 @@ export async function getAllParked() {
 }
 
 export async function getRevenue() {
-  let today = new Date();
+  const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  let tomorow = new Date(today);
-  tomorow.setDate(tomorow.getDate() + 1);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
 
-  let weekAgo = new Date(today);
+  const weekAgo = new Date(today);
   weekAgo.setDate(today.getDate() - 7);
 
-  let monthAgo = new Date(today)
-  monthAgo.setDate(today.getDate()-30)
+  const monthAgo = new Date(today);
+  monthAgo.setDate(today.getDate() - 30);
 
-  let todaySessions = await ParkingSession.find({fee : {$ne : null} ,exitTime : {$gte : today , $lte:tomorow}})
-  let todayRevenue = todaySessions.reduce((sum , s)=>{
-    return sum + (s.fee || 0)
-  }, 0)
+  // We run a single aggregation pipeline to calculate all values at once in the DB!
+  const [revenueStats] = await ParkingSession.aggregate([
+    {
+      // Step 1: Filter only completed sessions with fees
+      $match: {
+        fee: { $ne: null },
+        exitTime: { $ne: null }
+      }
+    },
+    {
+      // Step 2: Use conditional groups to sum up fees for different timeframes
+      $group: {
+        _id: null, // We want a single combined result document
+        todayRevenue: {
+          $sum: {
+            $cond: [
+              { $and: [{ $gte: ["$exitTime", today] }, { $lte: ["$exitTime", tomorrow] }] },
+              "$fee",
+              0
+            ]
+          }
+        },
+        lastWeekRevenue: {
+          $sum: {
+            $cond: [
+              { $gte: ["$exitTime", weekAgo] },
+              "$fee",
+              0
+            ]
+          }
+        },
+        lastMonthRevenue: {
+          $sum: {
+            $cond: [
+              { $gte: ["$exitTime", monthAgo] },
+              "$fee",
+              0
+            ]
+          }
+        },
+        allTimeRevenue: {
+          $sum: "$fee"
+        }
+      }
+    }
+  ]);
 
-
-  let lastWeekSessions =  await ParkingSession.find({fee : {$ne : null} ,exitTime : {$gte : weekAgo }})
-  let lastWeekRevenue = lastWeekSessions.reduce((sum , s)=>{
-    return sum + (s.fee || 0)
-  }, 0)
-
-  let lastMonthSessions =  await ParkingSession.find({fee : {$ne : null} ,exitTime : {$gte : monthAgo }})
-  let lastMonthRevenue = lastMonthSessions.reduce((sum , s)=>{
-    return sum + (s.fee || 0)
-  }, 0)
-
-  let allTimeSessions =  await ParkingSession.find({fee : {$ne : null} })
-  let allTimeRevenue = allTimeSessions.reduce((sum , s)=>{
-    return sum + (s.fee || 0)
-  }, 0)
-
-
-  let revenue = {
-    todayRevenue,
-    lastWeekRevenue,
-    lastMonthRevenue,
-    allTimeRevenue
-  }
-  return revenue;
+  // If there are no sessions in the database yet, return zeros gracefully
+  return {
+    todayRevenue: revenueStats?.todayRevenue || 0,
+    lastWeekRevenue: revenueStats?.lastWeekRevenue || 0,
+    lastMonthRevenue: revenueStats?.lastMonthRevenue || 0,
+    allTimeRevenue: revenueStats?.allTimeRevenue || 0,
+  };
 }
