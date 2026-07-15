@@ -5,6 +5,7 @@ import helmet from "./config/helmet.js";
 import cors from "./config/cors.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 import './config/env.js'
+import { NotFoundError } from "./utils/errors.js";
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.use(router);
 
 
 app.get('/' , (req , res)=>{
-  res.send('work')
+  throw new NotFoundError('this is a test error') 
 })
 
 

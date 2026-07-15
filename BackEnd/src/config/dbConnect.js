@@ -1,15 +1,19 @@
 import mongoose from "mongoose";
-// what is the error over here
+
 async function connectDB() {
   try {
-  
-  await  mongoose.connect(process.env.MONGODB_URI + "Parking")
-      console.log(`MongoDB connected\n\n\n`);
+    // Ensure the URI exists before trying to connect
+    if (!process.env.MONGODB_URI) {
+      throw new Error("MONGODB_URI is not defined in your environment variables!");
+    }
+
+    await mongoose.connect(process.env.MONGODB_URI, {
+      dbName: "Parking" // Cleanly targets the 'Parking' database
+    });
     
+    console.log(`MongoDB connected\n\n\n`);
   } catch (error) {
-    console.log(
-      `connection failed ${error}`,
-    );
+    console.log(`connection failed ${error}`);
   }
 }
    

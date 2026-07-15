@@ -1,36 +1,28 @@
-export const errorHandler = (err, req, res, next) => {
-  let error = { ...err };
-  error.message = err.message;
-  let statusCode = err?.statuscode
-  console.log(err);
+// middleware/errorHandler.js
 
-  if (err.name == "CastError") {
-    let message = "Resource not found";
-    error = { message, statusCode: 404 };
-  }
-  if (err.code == 11000) {
-    let message = "Duplicate field vlaue not alowed!";
-    error = { message, statusCode: 400 };
-  }
-  if (err.name == "ValidationError") {
-    let message = "Feild validation error accure";
-    error = { message, statusCode: 400 };
-  }
+import { ApiError } from '../utils/errors.js';
 
-  if (err.name == "JsonWebTokenError") {
-    let message = "Invalid token";
-    error = { message, statusCode: 401 };
-  }
+const errorHandler = (err, req, res, next) => {
 
-  if (err.name == "TokenExpiredError") {
-    let message = "token expired";
-    error = { message, statusCode: 401 };
-  }
-  console.log(error.message);
-  console.log("\n" + error.message + "\n");
-  console.log(error);
-  res.status(statusCode || 500).json({
-    success: false,
-    message: error.message || "Server Error",
-  });
+    if (err instanceof ApiError) {
+        return res.status(err.statusCode).json({
+            success: false,
+            error: {
+                message: err.message,
+                code: err.errorCode,
+            },
+        });
+    }
+
+    console.error(err);
+
+    return res.status(500).json({
+        success: false,
+        error: {
+            message: "Something went wrong",
+            code: "INTERNAL_SERVER_ERROR",
+        },
+    });
 };
+
+export default errorHandler;
