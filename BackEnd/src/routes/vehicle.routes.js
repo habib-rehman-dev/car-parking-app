@@ -11,7 +11,7 @@ vehicleRoutes.post(
   expressValidator,
   vehicle.checkIn,
 );
-vehicleRoutes.put(
+vehicleRoutes.patch(
   "/checkout",
  vehicle.checkOut
 );

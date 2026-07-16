@@ -3,7 +3,7 @@ import * as vehicleService from "../services/vheicle.service.js";
 export async function checkIn(req, res, next) {
   try {
     let result = await vehicleService.checkin(req.body);
-    console.log(result)
+    
 
     res.json(result);
   } catch (err) {

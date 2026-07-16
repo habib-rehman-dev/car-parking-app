@@ -58,6 +58,7 @@ export async function getStats() {
 
 export async function getAllParked() {
   let parked = await ParkingSession.find({ status: "parked" });
+  
   return parked;
 }
 

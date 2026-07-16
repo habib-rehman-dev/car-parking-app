@@ -8,5 +8,6 @@ export let dashboardRoutes = Router();
 dashboardRoutes.get('/stats', dashboardCtrls.getStats);
 
 // Protected routes (requires login)
-dashboardRoutes.get('/getallparked', protect, dashboardCtrls.getAllParked);
+dashboardRoutes.use(protect);
+dashboardRoutes.get('/getallparked',  dashboardCtrls.getAllParked);
 dashboardRoutes.get('/revenue', checkRole(['admin']), dashboardCtrls.getRevenue);

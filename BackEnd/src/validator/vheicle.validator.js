@@ -11,14 +11,25 @@ export const checkIn = [
     .withMessage("Driver name must be at least 3 characters long"),
 
   // 2. Phone Number
-  body("phone")
-    .trim()
-    .notEmpty()
-    .withMessage("Phone number is required")
-    // 'any' allows valid mobile formats globally, including Pakistan (+92)
-    .isMobilePhone("any") 
-    .withMessage("Please enter a valid mobile phone number"),
+ body("phone")
+  .trim()
+  .notEmpty()
+  .withMessage("Phone number is required")
+  .isMobilePhone("any") 
+  .withMessage("Please enter a valid mobile phone number")
+  // Clean the number so it matches your strict 11-digit schema format
+  .customSanitizer((value) => {
+    // 1. Strip out everything that isn't a number (spaces, dashes, plus signs)
+    let digitsOnly = value.replace(/\D/g, "");
 
+    // 2. If it starts with a country code like '92', convert it to local '0' 
+    // Example: "923001234567" -> "03001234567" (11 digits)
+    if (digitsOnly.startsWith("92") && digitsOnly.length === 12) {
+      digitsOnly = "0" + digitsOnly.slice(2);
+    }
+
+    return digitsOnly;
+  }),
   // 3. Vehicle Type
   body("type")
     .trim()

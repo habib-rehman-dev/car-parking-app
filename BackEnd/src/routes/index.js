@@ -12,7 +12,7 @@ const router = Router();
 
 router.use("/auth", authRoutes);
 router.use(protect);
-router.use("/vehicle" , vehicleRoutes);
+router.use("/vehicle" ,checkRole(["user", "admin"]), vehicleRoutes);
 router.use("/sessions", checkRole(["user", "admin"]), parkingSessionROutes);
 router.use("/dashboard", dashboardRoutes);
 

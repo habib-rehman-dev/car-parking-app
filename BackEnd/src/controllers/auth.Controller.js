@@ -1,6 +1,7 @@
 import * as authService from "../services/auth.service.js";
 import jwt from "jsonwebtoken";
 import User from "../model/User.model.js";
+import { ApiError, AuthenticationError } from "../utils/errors.js";
 
 
 export const register = async (req, res, next) => {
@@ -26,23 +27,7 @@ export const login = async (req, res, next) => {
   }
 };
 
-export const getme = async (req, res) => {
-  try {
-    let token = req.cookies.token;
-    let decoded = jwt.verify(token, process.env.JWT_SECRET );
-    let _id = decoded._id;
-    let user = await User.findById(_id);
-    if (!user) {
-      return res
-        .status(404)
-        .json({ message: "user not found", success: false });
-    }
-    res.json({ message: "you got the user data", user, success: true });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "internal server error", success: false });
-  }
-};
+
 
 export const logout = (req, res) => {
   try {
@@ -52,5 +37,20 @@ export const logout = (req, res) => {
   } catch (err) {
     console.log(err.message);
     res.json({ messege: "faild to logout" });
+  }
+};
+
+
+export const getme = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      throw new AuthenticationError('Token Missing')
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded._id).select("-password");
+    res.json({ message: "User data retrieved", user, success: true });
+  } catch (err) {
+    next(err);  // Let your error middleware handle it
   }
 };

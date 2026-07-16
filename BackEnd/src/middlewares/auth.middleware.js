@@ -1,10 +1,12 @@
 import jwt from 'jsonwebtoken'
 import {AuthenticationError} from '../utils/errors.js'
+import User from '../model/User.model.js'
 
-export default function protect(req, res, next){
+export default async function protect(req, res, next){
     try{
 
         let token = req.cookies.token
+       
         if(!token) {
             throw new AuthenticationError('unauthorized')
         }
@@ -12,7 +14,13 @@ export default function protect(req, res, next){
         if(!decode){
             throw new AuthenticationError('Wrong token for authenticaiton')
         }
-        req.user = decode
+        let _di = decode._id
+        let user = await User.findById(_di)
+        
+        if(!user){
+            throw new AuthenticationError('User not found')
+        }
+        req.user = user
       
         next()
     }
