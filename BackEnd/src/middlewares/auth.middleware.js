@@ -5,7 +5,6 @@ export default function protect(req, res, next){
     try{
 
         let token = req.cookies.token
-        // console.log('hi habibi this is the token ' + token)
         if(!token) {
             throw new AuthenticationError('unauthorized')
         }
@@ -22,3 +21,19 @@ export default function protect(req, res, next){
         next(err)
     }
 }
+
+function checkRole(roles){
+    return (req, res, next) => {
+        console.log(req.user)
+        if(!roles.includes(req.user.role)){
+            throw new AuthenticationError('you are not authorized to access this route')
+        }
+        next()
+    }
+}
+
+
+
+
+export {checkRole}
+

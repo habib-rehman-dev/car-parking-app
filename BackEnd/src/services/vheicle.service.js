@@ -5,11 +5,13 @@ import * as utils from "../utils/parkingCalculators.js";
 import { ApiError } from "../utils/errors.js";
 
 export async function checkin({ type, phone, driverName, licencePlate }) {
+  console.log(type, phone, driverName, licencePlate);
   let vehicle = await Vehicle.findOne({ licencePlate });
   if (!vehicle) {
     vehicle = await Vehicle.create({ type, phone, driverName, licencePlate });
   }
-
+  
+  console.log("Found vehicle:", vehicle);
   // Double-check in app logic first (good practice)
   let activeSession = await ParkingSession.findOne({
     vehicleId: vehicle._id,
@@ -22,7 +24,7 @@ export async function checkin({ type, phone, driverName, licencePlate }) {
       "VEHICLE_ALREADY_PARKED",
     );
   }
-
+  console.log("Creating new parking session for vehicle:", vehicle.licencePlate);
   try {
     // Create the session
     let session = await ParkingSession.create({

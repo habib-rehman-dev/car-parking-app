@@ -1,5 +1,5 @@
 import express from "express";
-import router from "./routes/index.js";
+ import router from "./routes/index.js";
 import cookieConfig from "./config/cookie.js";
 import helmet from "./config/helmet.js";
 import cors from "./config/cors.js";
@@ -16,14 +16,16 @@ app.use(
   helmet,
 ); 
 
-app.use(router);
-// app.use('/api/v1/',router);
+
+app.use('/api/v1',router);
+
+app.get("/", (req, res) => {
+  console.log("Health check route hit");
+  res.status(200).json({ message: "API is healthy" });
+});
 
 
 
-// app.get('/' , (req , res)=>{
-//   throw new AuthenticationError('this is a test error') 
-// })
 
 
 app.use(errorHandler);

@@ -1,6 +1,6 @@
 import ParkingSession from "../model/ParkingSession.js";
 import Vehicle from "../model/Vehicle.js";
-import { cartTypes } from "../utils/carTypes.js";
+import { carTypes } from "../utils/carTypes.js";
 
 // global functions
 
@@ -43,8 +43,8 @@ export async function getStats() {
       return acc;
     },
     {
-      [cartTypes.BIKE]: 0,
-      [cartTypes.CAR]: 0,
+      [carTypes.BIKE]: 0,
+      [carTypes.CAR]: 0,
     },
   );
   return {

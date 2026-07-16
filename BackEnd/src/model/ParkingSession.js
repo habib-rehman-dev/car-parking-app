@@ -34,12 +34,14 @@ let ParkingSessionSchema = mongoose.Schema(
 
 // over here i am using the mongose pagination plugin to paginate the data
 
-parkingSessionSchema.plugin(mongoosePaginate);
+ParkingSessionSchema.plugin(mongoosePaginate);
 
 // --- THE FIX: PARTIAL UNIQUE INDEX ---
 // This ensures a vehicleId can only have ONE document where status is "parked"
+
+// ParkingSessionSchema.index({ exitTime: 1 });
 ParkingSessionSchema.index(
-  { vehicleId: 1 },
+  { vehicleId: 1, exitTime: 1 },
   {
     unique: true,
     partialFilterExpression: { status: "parked" },

@@ -1,4 +1,4 @@
-export const cartTypes = {
+export const carTypes = {
   BIKE: "bike",
   CAR: "car",
 };

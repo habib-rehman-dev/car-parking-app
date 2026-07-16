@@ -15,7 +15,6 @@ export let registerValidator = [
     .withMessage("passwerd should be between 8 and 40"),
   body("role")
     .notEmpty()
-    
     .isIn(["user", "admin"])
     .withMessage("role should be *user* or *admin*"), // i want to match over here by the validator user na admin so then how that i can do that also
 ];

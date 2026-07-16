@@ -1,13 +1,13 @@
 import Router from "express";
-import * as vehicle from "../controllers/vhicle.controller.js";
-import * as validators from "../validator/vehicle.validator.js";
+import * as vehicle from "../controllers/vehicle.controller.js";
+import * as validators from "../validator/vheicle.validator.js";
 import { expressValidator } from "../middlewares/validate.middleware.js";
 
 let vehicleRoutes = Router();
 
 vehicleRoutes.post(
   "/checkin",
-  validators.chekIn,
+  validators.checkIn,
   expressValidator,
   vehicle.checkIn,
 );

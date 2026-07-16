@@ -1,7 +1,12 @@
 import * as authService from "../services/auth.service.js";
+import jwt from "jsonwebtoken";
+import User from "../model/User.model.js";
+
+
 export const register = async (req, res, next) => {
   try {
     let result =await authService.register(req.body);
+    
     res.json(result);
   } catch (err) {
     next(err);
@@ -9,7 +14,7 @@ export const register = async (req, res, next) => {
 };
 export const login = async (req, res, next) => {
   try {
-    console.log(req.body)
+    
     let {token ,result } = await authService.login(req.body, res);
       res.cookie("token", token, {
     httpOnly: true,
@@ -23,13 +28,8 @@ export const login = async (req, res, next) => {
 
 export const getme = async (req, res) => {
   try {
-    let token = req.cookies?.token;
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "not autherized", success: false });
-    }
-    let decoded = jwt.verify(token, process.env.JWT_SECRET || "my secret_ ji");
+    let token = req.cookies.token;
+    let decoded = jwt.verify(token, process.env.JWT_SECRET );
     let _id = decoded._id;
     let user = await User.findById(_id);
     if (!user) {
@@ -37,7 +37,7 @@ export const getme = async (req, res) => {
         .status(404)
         .json({ message: "user not found", success: false });
     }
-    res.json({ messege: "you got the user data", user, success: true });
+    res.json({ message: "you got the user data", user, success: true });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "internal server error", success: false });
@@ -46,7 +46,6 @@ export const getme = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
-    console.log('hi')
     res.clearCookie("token");
     
     res.json({ message: "loged out successfully", success: true });

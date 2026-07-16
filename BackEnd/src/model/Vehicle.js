@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import { cartTypes } from "../utils/carTypes.js";
+import { carTypes } from "../utils/carTypes.js";
 let VehicleSchema = mongoose.Schema(
   {
     type: {
       type: String,
-      enum:Object.values(cartTypes),
+      enum:Object.values(carTypes),
       lowercase: true,
       trim: true,
       required: [true, "Type can be car or bike"],
