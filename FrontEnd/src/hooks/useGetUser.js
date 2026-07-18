@@ -1,28 +1,24 @@
-// here i am going to get the data from the api using react query and axios 
-import axiosInstance from "../api/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
+import { getme } from "../features/auth/api/usersApi";
 
-
-
-
-
-
-
-
-
-const useGetUser =  () => {
-    let fetchusers = async ()=>{
-        let response = await axiosInstance.get()
-        return response.data.users
-    }
- 
-
-
-    return useQuery({
-        queryKey: ['users'],
-        queryFn: fetchusers,
-        
-    });
+export const useGetUser = () => {
+  return useQuery({
+    queryKey: ["me"],
+    queryFn: async () => {
+      let data = await getme();
+      return data.user;
+    },
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
 };
 
-export default useGetUser
+// useQuery({
+//     queryKey: ["me"],
+//     queryFn: async () => {
+//       const  data  = await getme();
+//       return data.user;
+//     },
+//     retry: false,
+//     staleTime: 5 * 60 * 1000,
+//   });

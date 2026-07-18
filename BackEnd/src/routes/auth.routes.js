@@ -4,12 +4,14 @@ import * as auths from "../controllers/auth.Controller.js";
 import protect from "../middlewares/auth.middleware.js";
 import { expressValidator } from "../middlewares/validate.middleware.js";
 
+
 let authRoutes = express.Router();
 
 // --- PUBLIC ROUTES (No authentication required) ---
 authRoutes.post('/login', validators.loginValidator, expressValidator, auths.login);
 authRoutes.post(
   "/register",
+  
   validators.registerValidator,
   expressValidator,
   auths.register,

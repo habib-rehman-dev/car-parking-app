@@ -4,8 +4,9 @@ import { ApiError } from "../utils/errors.js";
 
 const errorHandler = (err, req, res, next) => {
   if (res.headersSent) {
-    return next(err);
+    return next();
   }
+  console.log(err.statusCode)
 
   if (err instanceof ApiError) {
     return res.status(err.statusCode).json({

@@ -13,12 +13,8 @@ export const useLogout = () => {
       return data;
     },
     onSuccess: () => {
-      // Wipe the cached user — don't just invalidate, REMOVE it.
-      queryClient.setQueryData(["me"], null);
-
-      // Clear everything else too — no leftover data from the old session
+      queryClient.setQueryData(["me"], null); // instantly wipes cache, no refetch needed
       queryClient.clear();
-
       navigate("/login");
     },
     onError: () => {

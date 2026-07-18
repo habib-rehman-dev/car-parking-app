@@ -6,7 +6,7 @@ node_modules/
 # Production / Build outputs
 dist/
 build/
-
+__files/
 # Local Environment Variables / Secrets (NEVER upload these!)
 .env
 .env.local

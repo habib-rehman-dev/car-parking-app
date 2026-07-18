@@ -14,14 +14,13 @@ export default async function protect(req, res, next){
         if(!decode){
             throw new AuthenticationError('Wrong token for authenticaiton')
         }
-        let _di = decode._id
-        let user = await User.findById(_di)
+        let userId = decode.userId
+        let user = await User.findById(userId)
         
         if(!user){
             throw new AuthenticationError('User not found')
         }
         req.user = user
-      console.log("User in protect middleware:", req.user); // Log the user object for debugging
         next()
     }
     catch(err){

@@ -5,18 +5,16 @@ export const login = async (email, password) => {
   return result.data;
 };
 
-export const register = async (email, password, role) => {
-  let result = await axiosInstance.post("/auth/register", {
-    email,
-    password,
-    role,
-  });
-  return result.data;
+export const register = async ({ email, password, role }) => {
+  const { data } = await axiosInstance.post("/auth/register", { email, password, role });
+  console.log('register fun')
+  return data; // clean JSON payload, not the full Axios response object
 };
 
 export const getme = async () => {
-  let result = await axiosInstance.get("/auth/getme");
-  return result.data;
+  let {data} = await axiosInstance.get("/auth/getme");
+  
+  return data;
 };
 
 export const logout = async () => {

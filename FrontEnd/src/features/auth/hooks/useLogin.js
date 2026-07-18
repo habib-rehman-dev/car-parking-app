@@ -3,20 +3,18 @@ import { login } from "../api/usersApi";
 
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import  useAuth  from "../../../contexts/useAuth";
 
 const useLogin = () => {
-  const { setUser } = useAuth();
+
   const navigate = useNavigate();
 
   return useMutation({
     mutationFn: ({ email, password }) => login(email, password),
 
-    onSuccess: (data) => {
-      setUser(data.user);
-      // localStorage.setItem("token", data.token); // ← missing this
+    onSuccess: () => {
+
       toast.success("Logged in successfully!");
-      navigate("/dashboard");
+      navigate("/");
     },
 
     onError: (error) => {

@@ -45,7 +45,9 @@ export const refresh = async (req, res, next) => {
 export const register = async (req, res, next) => {
   try {
     let result = await authService.register(req.body);
-
+   if(!result){
+    throw new ApiError('SignUp Got Failed' , 400 , 'SignUp_Error')
+   }
     res.json(result);
   } catch (err) {
     next(err);
@@ -70,8 +72,11 @@ export const getme = async (req, res, next) => {
       throw new AuthenticationError("Token Missing");
     }
     const decoded = jwt.verify(token, process.env.ACCESS_SECRET);
-    const user = await User.findById(decoded._id).select("-password");
-    res.json({user, success: true });
+    const user = await User.findById(decoded.userId).select("-password");
+    if(!user){
+      throw new AuthenticationError("User not found");
+    }
+    res.json({user, successjh: true });
   } catch (err) {
     
     throw new AuthenticationError("Invalid or Expired Token");

@@ -26,9 +26,10 @@ axiosInstance.interceptors.request.use(
 // Runs on every response that comes back from the server
 axiosInstance.interceptors.response.use(
   (response) => {
+    console.log('any thing')
     // 2xx responses — just pass through
     toast(response.status);
-
+console.log(response.data)
     return response;
   },
   (error) => {

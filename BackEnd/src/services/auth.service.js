@@ -47,17 +47,21 @@ export async function login({ email, password }) {
 }
 
 export async function register({ email, password, role }) {
+
   let isExist = await User.findOne({ email });
 
-  if (isExist)
+  if (isExist){
+
     throw new ApiError("user is already exist with the same email" , 409 , "USER_ALREADY_EXIST");
+  }
+  console.log(isExist)
   let user = await User.create({
     email: email,
     password: password,
     role: role,
   });
   if (!user) throw new Error("sorry sth went wrong");
-
+  
   return {
     message: "user created succsfully",
     success: true,

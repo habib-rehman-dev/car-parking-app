@@ -1,31 +1,37 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Avatar, Menu, MenuItem, IconButton, Divider, ListItemIcon } from "@mui/material";
+import {
+  Avatar,
+  Menu,
+  MenuItem,
+  IconButton,
+  Divider,
+  ListItemIcon,
+} from "@mui/material";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LoginIcon from "@mui/icons-material/Login";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import LogoutIcon from "@mui/icons-material/Logout";
-import useGetme from "../../features/auth/hooks/useGetme";
-// import {useLogout} from "../../features/auth/hooks/useLogout";
+import { useGetUser } from "../../hooks/useGetUser";
+import { useLogout } from "../../features/auth/hooks/useLogout";
 
 const Header = () => {
-  const { data: user, isLoading } = useGetme();
-//   const { mutate: logout } = useLogout();
-  console.log("Header user:", user); 
+  const { data: user, isLoading } = useGetUser();
+  console.log("user in header", user);
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
-
+  const { mutate: logout } = useLogout();
   const handleMenuOpen = (e) => setAnchorEl(e.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
     handleMenuClose();
-    // logout();
+    logout();
   };
 
   return (
-    <header className="sticky top-0 z-50 p-4">
+    <header className="sticky top-0 z-50 p-4 ">
       <div
         className="flex justify-between items-center px-6 py-3
                    bg-white/20 backdrop-blur-lg
@@ -36,15 +42,23 @@ const Header = () => {
         {/* Logo */}
         <div className="flex items-center space-x-2">
           <LocalParkingIcon className="text-blue-600" fontSize="large" />
-          <h1 className="text-xl font-bold text-gray-800">Parking Management</h1>
+          <h1 className="text-xl font-bold text-gray-800">
+            Parking Management
+          </h1>
         </div>
 
         {/* Nav links */}
         <nav className="flex items-center space-x-6">
-          <Link to="/" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
+          <Link
+            to="/"
+            className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+          >
             Home
           </Link>
-          <Link to="/dashboard" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
+          <Link
+            to="/dashboard"
+            className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+          >
             Dashboard
           </Link>
 
@@ -77,7 +91,11 @@ const Header = () => {
                   <span className="text-sm text-gray-600">{user.email}</span>
                 </MenuItem>
                 <Divider />
-                <MenuItem component={Link} to="/dashboard" onClick={handleMenuClose}>
+                <MenuItem
+                  component={Link}
+                  to="/dashboard"
+                  onClick={handleMenuClose}
+                >
                   <ListItemIcon>
                     <DashboardIcon fontSize="small" />
                   </ListItemIcon>
