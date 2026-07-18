@@ -1,22 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AppRouter } from "./router/AppRouter";
-// import { Provider } from "react-redux";
-// import { store } from "./store/store";
-import { AuthProvider } from "./context/auth.context";
+import Approuter from "./router/Approuter";
 
 function App() {
   return (
-    // <Provider store={store}>  //
-      <BrowserRouter>
-        <AuthProvider>
-
-          
-         <AppRouter />
-        </AuthProvider>
-         
-        
-      </BrowserRouter>
-    // </Provider>
+    <div
+      className="
+        min-h-screen w-full text-white font-sans
+        bg-[linear-gradient(to_bottom,rgba(17,24,39,0.75),rgba(17,24,39,0.85)),url('/bg-parking.jpg')]
+        bg-cover bg-center bg-no-repeat 
+        bg-fixed 
+        overflow-y-auto overflow-x-hidden
+      "
+    >
+      <Approuter/>
+      
+    </div>
   );
 }
 
