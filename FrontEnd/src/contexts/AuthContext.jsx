@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getme } from "../features/auth/api/authApi";
+
+import {getme} from '../features/auth/api/usersApi'
 import { AuthContext } from "./useAuth"; 
 
 const AuthProvider = ({ children }) => {
