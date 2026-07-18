@@ -8,19 +8,19 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
 
-  const { isLoading } = useQuery({
-    queryKey: ["authUser"],
-    queryFn: getme,
-    retry: false,              
-    refetchOnWindowFocus: false,
+  // const { isLoading } = useQuery({
+  //   queryKey: ["authUser"],
+  //   queryFn: getme,
+  //   retry: false,              
+  //   refetchOnWindowFocus: false,
 
 
-    onSuccess: (data) => setUser(data.user),
-    onError: () => setUser(null),
-  });
+  //   onSuccess: (data) => setUser(data.user),
+  //   onError: () => setUser(null),
+  // });
 
 
-  if (isLoading) return 'Loading...'
+  // if (isLoading) return 'Loading...'
 
   return (
     <AuthContext.Provider

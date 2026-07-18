@@ -7,8 +7,14 @@ import { expressValidator } from "../middlewares/validate.middleware.js";
 let authRoutes = express.Router();
 
 // --- PUBLIC ROUTES (No authentication required) ---
-authRoutes.post("/login", validators.loginValidator,expressValidator, auths.login);
-authRoutes.post("/register", validators.registerValidator,expressValidator, auths.register); // Moved here!
+authRoutes.post('/login', validators.loginValidator, expressValidator, auths.login);
+authRoutes.post(
+  "/register",
+  validators.registerValidator,
+  expressValidator,
+  auths.register,
+); 
+// what i do 
 
 // --- PROTECT MIDDLEWARE ---
 // Everything below this line will require a valid token/session to access

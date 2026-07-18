@@ -2,24 +2,44 @@ import jwt from "jsonwebtoken";
 import User from "../model/User.model.js";
 import { ApiError, AuthenticationError } from "../utils/errors.js";
 
+
+  
+  const generateTokens = (userId) => {
+  const accessToken = jwt.sign({ userId }, process.env.ACCESS_SECRET, { expiresIn: "15m" });
+  const refreshToken = jwt.sign({ userId }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
+  return { accessToken, refreshToken };
+};
+
+// exports.refresh = async (req, res) => {
+//   const token = req.cookies.refreshToken;
+//   if (!token) return res.status(401).json({ message: "No refresh token" });
+
+//   try {
+//     const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+//     const accessToken = jwt.sign({ userId: decoded.userId }, process.env.ACCESS_SECRET, { expiresIn: "15m" });
+//     res.cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
+//     res.json({ success: true });
+//   } catch (err) {
+//     res.status(403).json({ message: "Invalid refresh token" });
+//   }
+// };
+
+
+
+
+
 export async function login({ email, password }) {
-  let isExist = await User.findOne({ email });
-  if (!isExist || (await isExist.matchpassword(password)) === false) {
+  let user = await User.findOne({email});
+  
+  if (!user || (await user.matchpassword(password)) === false) {
     throw new AuthenticationError("Invalid Credentials");
   }
-
-  let token = jwt.sign(
-    { _id: isExist._id, email: isExist.email },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: "7d",
-    },
-  );
+  const { accessToken, refreshToken } = generateTokens(user._id);
 
   return {
-    token,
+     accessToken, refreshToken ,
     result: {
-      user: isExist,
+      user: user,
       message: "you loged in successfuly",
       success: true,
     },

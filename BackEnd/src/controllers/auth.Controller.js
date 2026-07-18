@@ -4,53 +4,76 @@ import User from "../model/User.model.js";
 import { ApiError, AuthenticationError } from "../utils/errors.js";
 
 
-export const register = async (req, res, next) => {
-  try {
-    let result =await authService.register(req.body);
-    
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
+const cookieOptions = {
+  httpOnly: true, // JS can't read it — XSS protection
+  secure: true, // only sent over HTTPS
+  sameSite: "strict", // CSRF protection — cookie only sent for same-site requests
 };
+
 export const login = async (req, res, next) => {
   try {
+    let { accessToken ,refreshToken, result } = await authService.login(req.body, res);
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: 15 * 60 * 1000,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      ...cookieOptions,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+export const refresh = async (req, res, next) => {
+  const token = req.cookies.refreshToken;
+  if (!token) throw new AuthenticationError("No refresh token");
+
+  try {
+    const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+    const accessToken = jwt.sign({ userId: decoded.userId }, process.env.ACCESS_SECRET, { expiresIn: "15m" });
+    res.cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
+    res.json({ success: true });
+  } catch (err) {
     
-    let {token ,result } = await authService.login(req.body, res);
-      res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: "lax",
-  });
+    throw new AuthenticationError("Invalid refresh token");
+  }
+};
+export const register = async (req, res, next) => {
+  try {
+    let result = await authService.register(req.body);
+
     res.json(result);
   } catch (err) {
     next(err);
   }
 };
 
-
-
-export const logout = (req, res) => {
+export const logout = (req, res, next) => {
   try {
-    res.clearCookie("token");
-    
-    res.json({ message: "loged out successfully", success: true });
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", cookieOptions);
+
+    res.json({ message: "Logged out successfully", success: true });
   } catch (err) {
-    console.log(err.message);
-    res.json({ messege: "faild to logout" });
+    throw new ApiError("Logout failed", 500, "LOGOUT_FAILED");
   }
 };
-
 
 export const getme = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const token = req.cookies.accessToken;
     if (!token) {
-      throw new AuthenticationError('Token Missing')
+      throw new AuthenticationError("Token Missing");
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.ACCESS_SECRET);
     const user = await User.findById(decoded._id).select("-password");
-    res.json({ message: "User data retrieved", user, success: true });
+    res.json({user, success: true });
   } catch (err) {
-    next(err);  // Let your error middleware handle it
+    
+    throw new AuthenticationError("Invalid or Expired Token");
   }
 };

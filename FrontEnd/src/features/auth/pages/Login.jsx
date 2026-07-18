@@ -8,7 +8,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginMutation(email, password);
+    loginMutation.mutate({ email, password });
   };
 
   return (

@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 
 export  let  queryclient=new QueryClient({

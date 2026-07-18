@@ -5,12 +5,12 @@ import User from '../model/User.model.js'
 export default async function protect(req, res, next){
     try{
 
-        let token = req.cookies.token
+        let token = req.cookies.accessToken
        
         if(!token) {
             throw new AuthenticationError('unauthorized')
         }
-        let decode = jwt.verify(token , process.env.JWT_SECRET)
+        let decode = jwt.verify(token , process.env.ACCESS_SECRET)
         if(!decode){
             throw new AuthenticationError('Wrong token for authenticaiton')
         }
@@ -21,7 +21,7 @@ export default async function protect(req, res, next){
             throw new AuthenticationError('User not found')
         }
         req.user = user
-      
+      console.log("User in protect middleware:", req.user); // Log the user object for debugging
         next()
     }
     catch(err){
