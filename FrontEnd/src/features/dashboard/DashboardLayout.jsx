@@ -16,10 +16,11 @@ import { useLogout } from "../auth/hooks/useLogout";
 
 const navItems = [
   { label: "Overview", path: "/dashboard", icon: <DashboardIcon fontSize="small" /> },
-  { label: "Vehicles", path: "/dashboard/vehicles", icon: <DirectionsCarIcon fontSize="small" /> },
+  { label: "Parked", path: "/dashboard/vehicles", icon: <DirectionsCarIcon fontSize="small" /> },
   { label: "Check In", path: "/dashboard/check-in", icon: <LoginIcon fontSize="small" /> },
   { label: "Check Out", path: "/dashboard/check-out", icon: <LogoutIcon fontSize="small" /> },
   { label: "Sessions", path: "/dashboard/sessions", icon: <HistoryIcon fontSize="small" /> },
+  { label: "Register", path: "/dashboard/register", icon: <HistoryIcon fontSize="small" /> },
 ];
 
 const DashboardLayout = () => {

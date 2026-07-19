@@ -1,16 +1,19 @@
 import { Routes, Route } from "react-router-dom";
 
 import Home from "../page/Home";
-import Register from "../features/auth/pages/Register";
+import Register from "../features/dashboard/pages/Register";
 import Login from "../features/auth/pages/Login";
 import ProtectedRoute from "./Protect";
+
 import DashboardLayout from "../features/dashboard/DashboardLayout";
 import Overview from "../features/dashboard/pages/OverView";
-import VehicleList from "../features/dashboard/pages/VehicleList";
+import VehicleList from "../features/dashboard/pages/Parked";
 import CheckIn from "../features/dashboard/pages/ChckIn";
+import CanNotAdminAccess from "../page/CanNotAdminAccess";
+import AdminRoute from "./AdminRout";
+import Checout from "../features/dashboard/pages/Checout";
+
 // import these once you build them:
-// import VehicleList from "../features/vehicles/pages/VehicleList";
-// import CheckIn from "../features/parking-sessions/pages/CheckIn";
 // import CheckOut from "../features/parking-sessions/pages/CheckOut";
 // import SessionHistory from "../features/parking-sessions/pages/SessionHistory";
 
@@ -20,7 +23,7 @@ const AppRouter = () => {
       {/* Public routes */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/denied" element={<CanNotAdminAccess />} />
 
       {/* Protected routes — anything nested here requires login */}
       <Route element={<ProtectedRoute />}>
@@ -28,7 +31,18 @@ const AppRouter = () => {
           <Route index element={<Overview />} />
           <Route path="vehicles" element={<VehicleList />} />
           <Route path="check-in" element={<CheckIn />} />
-          {/* <Route path="check-out" element={<CheckOut />} /> */}
+
+          {/* Admin-only — nested guard inside the already-logged-in guard */}
+          <Route
+            path="register"
+            element={
+              <AdminRoute>
+                <Register />
+              </AdminRoute>
+            }
+          />
+
+          <Route path="check-out" element={<Checout />} />
           {/* <Route path="sessions" element={<SessionHistory />} /> */}
         </Route>
       </Route>

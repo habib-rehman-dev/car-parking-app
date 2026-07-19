@@ -12,8 +12,8 @@ const router = Router();
 
 router.use("/auth", authRoutes);
 router.use(protect);
-router.use("/vehicle" ,checkRole(["user", "admin"]), vehicleRoutes);
-router.use("/sessions", checkRole(["user", "admin"]), parkingSessionROutes);
-router.use("/dashboard", dashboardRoutes);
+router.use("/vehicle" , vehicleRoutes);
+router.use("/sessions", parkingSessionROutes);
+router.use("/dashboard", checkRole(["user", "admin"]),dashboardRoutes);
 
 export default router;

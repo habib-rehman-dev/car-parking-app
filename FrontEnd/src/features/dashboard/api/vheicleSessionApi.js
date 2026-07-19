@@ -20,3 +20,12 @@ export async function checkIn({ driverName, phone, type, licencePlate }) {
   });
   return data;
 }
+
+
+export async function checkout({ licencePlate }) {
+  const { data } = await axiosInstance.patch("/vehicle/checkout", {
+   
+    licencePlate,
+  });
+  return data;
+}

@@ -118,14 +118,7 @@ const Header = () => {
                 <LoginIcon fontSize="small" />
                 Login
               </Link>
-              <Link
-                to="/register"
-                className="flex items-center gap-1 px-4 py-1.5 bg-blue-600 text-white rounded-full
-                           hover:bg-blue-700 transition-colors font-medium text-sm"
-              >
-                <HowToRegIcon fontSize="small" />
-                Register
-              </Link>
+             
             </div>
           )}
         </nav>
