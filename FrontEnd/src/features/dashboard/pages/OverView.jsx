@@ -62,7 +62,6 @@ const Overview = () => {
     return <LoadingState message="Loading dashboard..." />;
   }
 
-
   return (
     <div className="flex flex-col gap-8">
       {/* ── Occupancy & vehicle stats ─────────────────────────── */}
@@ -136,60 +135,52 @@ const Overview = () => {
       </section>
 
       {/* ── Currently parked vehicles ──────────────────────────── */}
-      <section>
-        <SectionTitle>Currently Parked</SectionTitle>
-        {parkedError ? (
-          <ErrorState error={parkedErrorObj} onRetry={refetchParked} />
-        ) : !allParked || allParked.length === 0 ? (
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center text-white/50 text-sm">
-            No vehicles currently parked.
-          </div>
-        ) : (
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden">
-  <table className="w-full text-sm">
-    <thead>
-      <tr className="text-white/60 text-left border-b border-white/10">
-        <th className="px-5 py-3 font-medium">Vehicle ID</th>
-        <th className="px-5 py-3 font-medium">Entry Time</th>
-        <th className="px-5 py-3 font-medium">Exit Time</th>
-        <th className="px-5 py-3 font-medium">Fee</th>
-        <th className="px-5 py-3 font-medium">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {allParked.map((session) => (
-        <tr key={session._id} className="text-white/90 border-b border-white/5 last:border-0">
-          <td className="px-5 py-3 font-mono text-xs text-white/60">
-            {session.vehicleId.slice(-6)} {/* show last 6 chars — full ObjectId is ugly and unreadable */}
-          </td>
-          <td className="px-5 py-3">
-            {new Date(session.entryTime).toLocaleString()}
-          </td>
-          <td className="px-5 py-3">
-            {session.exitTime
-              ? new Date(session.exitTime).toLocaleString()
-              : <span className="text-white/40">—</span>}
-          </td>
-          <td className="px-5 py-3">${session.fee}</td>
-          <td className="px-5 py-3">
-            <span
-              className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize
-                ${
-                  session.status === "parked"
-                    ? "bg-emerald-500/20 text-emerald-300"
-                    : "bg-gray-500/20 text-gray-300"
-                }`}
-            >
-              {session.status}
-            </span>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-        )}
-      </section>
+      {/* ── Currently parked vehicles ──────────────────────────── */}
+<section>
+  <SectionTitle>Currently Parked</SectionTitle>
+  {parkedError ? (
+    <ErrorState error={parkedErrorObj} onRetry={refetchParked} />
+  ) : !allParked || allParked.length === 0 ? (
+    <div className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center text-white/50 text-sm">
+      No vehicles currently parked.
+    </div>
+  ) : (
+    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-white/60 text-left border-b border-white/10">
+            <th className="px-5 py-3 font-medium">Vehicle</th>
+            <th className="px-5 py-3 font-medium">Entry Time</th>
+            <th className="px-5 py-3 font-medium">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {allParked.map((session) => {
+            const vehicle = session.vehicleId; // now an object OR null — never a raw string
+
+            return (
+              <tr key={session._id} className="text-white/90 border-b border-white/5 last:border-0">
+                <td className="px-5 py-3">
+                  {vehicle?.licencePlate || (
+                    <span className="text-white/40 italic text-xs">Vehicle data unavailable</span>
+                  )}
+                </td>
+                <td className="px-5 py-3">
+                  {new Date(session.entryTime).toLocaleString()}
+                </td>
+                <td className="px-5 py-3">
+                  <span className="px-2.5 py-1 rounded-full text-xs font-medium capitalize bg-emerald-500/20 text-emerald-300">
+                    {session.status}
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  )}
+</section>
     </div>
   );
 };

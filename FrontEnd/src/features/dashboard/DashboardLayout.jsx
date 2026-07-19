@@ -8,26 +8,37 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HistoryIcon from "@mui/icons-material/History";
 import MenuIcon from "@mui/icons-material/Menu";
+
 import CloseIcon from "@mui/icons-material/Close";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 
 import { useGetUser } from "../../hooks/useGetUser";
 import { useLogout } from "../auth/hooks/useLogout";
 
-const navItems = [
-  { label: "Overview", path: "/dashboard", icon: <DashboardIcon fontSize="small" /> },
-  { label: "Parked", path: "/dashboard/vehicles", icon: <DirectionsCarIcon fontSize="small" /> },
-  { label: "Check In", path: "/dashboard/check-in", icon: <LoginIcon fontSize="small" /> },
-  { label: "Check Out", path: "/dashboard/check-out", icon: <LogoutIcon fontSize="small" /> },
-  { label: "Sessions", path: "/dashboard/sessions", icon: <HistoryIcon fontSize="small" /> },
-  { label: "Register", path: "/dashboard/register", icon: <HistoryIcon fontSize="small" /> },
-];
 
 const DashboardLayout = () => {
   const { data: user } = useGetUser();
   const { mutate: logout } = useLogout();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+
+
+const navItems = [
+  ...(user?.role === "admin"
+    ? [{ label: "Overview", path: "/dashboard", icon: <DashboardIcon fontSize="small" /> }]
+    : []),
+  
+  { label: "Parked", path: "/dashboard/vehicles", icon: <DirectionsCarIcon fontSize="small" /> },
+  { label: "Check In", path: "/dashboard/check-in", icon: <LoginIcon fontSize="small" /> },
+  { label: "Check Out", path: "/dashboard/check-out", icon: <LogoutIcon fontSize="small" /> },
+  { label: "Sessions", path: "/dashboard/sessions", icon: <HistoryIcon fontSize="small" /> },
+  // { label: "Register", path: "/dashboard/register", icon: <HistoryIcon fontSize="small" /> },
+   ...(user?.role === "admin"
+    ? [{ label: "Add User", path: "/dashboard/users/new", icon: <HistoryIcon fontSize="small" /> }]
+    : []),
+];
+
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

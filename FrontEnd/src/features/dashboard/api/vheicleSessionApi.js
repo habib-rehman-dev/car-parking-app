@@ -29,3 +29,12 @@ export async function checkout({ licencePlate }) {
   });
   return data;
 }
+
+// features/vehicles/api/vehicleApi.js
+export async function history({ limit, page }) {
+  const { data } = await axiosInstance.get("/sessions/gethistory", {
+    params: { limit, page }, // Axios turns this into ?limit=10&page=1 automatically
+  });
+  console.log(data)
+  return data;
+}

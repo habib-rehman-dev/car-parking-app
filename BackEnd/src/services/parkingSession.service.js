@@ -17,7 +17,6 @@ export async function getAllSession() {
 }
 export async function getHistory(options) {
   console.log("Options received in getHistory:", options);
-  // how to populate the vehicleId in the result of the paginate function
   let result = await ParkingSession.paginate({ status: "exited" }, { ...options, populate: "vehicleId" });
   console.log(result)
   if (result == [] || result.length == 0) {
