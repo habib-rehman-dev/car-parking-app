@@ -8,7 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryclient}>
           <App />
@@ -16,5 +16,5 @@ createRoot(document.getElementById("root")).render(
           <ReactQueryDevtools />
       </QueryClientProvider>
     </BrowserRouter>
-  </StrictMode>,
+  // </StrictMode>,
 );

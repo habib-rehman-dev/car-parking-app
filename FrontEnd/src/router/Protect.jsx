@@ -12,7 +12,7 @@ const ProtectedRoute = () => {
       </div>
     );
   }
-  console.log(user)
+  
   if (!user) {
     // send them to login, but remember where they were trying to go
     return <Navigate to="/login" state={{ from: location }} replace />;

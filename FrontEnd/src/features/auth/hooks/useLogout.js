@@ -15,7 +15,7 @@ export const useLogout = () => {
     onSuccess: () => {
       queryClient.setQueryData(["me"], null); // instantly wipes cache, no refetch needed
       queryClient.clear();
-      navigate("/login");
+      navigate('/');
     },
     onError: () => {
       // Even if the server call fails (e.g. network hiccup),

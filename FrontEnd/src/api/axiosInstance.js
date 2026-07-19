@@ -11,25 +11,21 @@ const axiosInstance = axios.create({
 });
 
 // ─── REQUEST INTERCEPTOR ──────────────────────────────────────────────────────
-// Runs before every request leaves the browser
+
 axiosInstance.interceptors.request.use(
   (config) => {
     return config;
   },
   (error) => {
-    // Request failed before even leaving (rare — network config issues)
     return Promise.reject(error);
   },
 );
 
 // ─── RESPONSE INTERCEPTOR ─────────────────────────────────────────────────────
-// Runs on every response that comes back from the server
+
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log('any thing')
-    // 2xx responses — just pass through
-    toast(response.status);
-console.log(response.data)
+   
     return response;
   },
   (error) => {
@@ -38,8 +34,9 @@ console.log(response.data)
 
     if (status === 401) {
       toast.error("Session expired. Please log in again.");
-      // window.location.href = "/login";
+      window.location.href = "/login";
     }
+    
 
     // else if (status === 403) {
     //       toast.error("You do not have permission to do this.");
@@ -50,7 +47,7 @@ console.log(response.data)
     // For everything else (400, 404, etc.) let the mutation/query handle it locally
     // because those errors are usually form-specific ("email already taken", etc.)
 
-    // return Promise.reject(error);
+    return Promise.reject(error);
   },
 );
 
