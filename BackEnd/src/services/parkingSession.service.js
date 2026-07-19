@@ -5,7 +5,8 @@ export async function getAllSession() {
   let result = await ParkingSession.find({ status: "parked" }).populate(
     "vehicleId",
   );
-  if (result == [] || result.length == 0) {
+
+  if (!result) {
     throw new ApiError(
       "No active parking sessions found",
       404,

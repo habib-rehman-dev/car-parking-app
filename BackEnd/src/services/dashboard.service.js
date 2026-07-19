@@ -5,6 +5,7 @@ import { carTypes } from "../utils/carTypes.js";
 // global functions
 
 export async function getStats() {
+  
   let today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -15,25 +16,20 @@ export async function getStats() {
   let currentlyparked = await ParkingSession.countDocuments({
     status: "parked",
   });
-
   // total vehicle in the system
   let totalvehicles = await Vehicle.countDocuments();
-
   // today checkins
   let todayCheckins = await ParkingSession.find({
     entryTime: { $gt: today, $lt: tomorow },
   });
-
   // today checkouts
   let todayCheckouts = await ParkingSession.find({
     status: "exited",
      exitTime: { $gt: today, $lt: tomorow },
   });
- 
   let parkdedSessions = await ParkingSession.find({
     status: "parked",
   }).populate("vehicleId");
-
   let accopyBYType = await parkdedSessions.reduce(
     (acc, session) => {
       let vehicle = session.vehicleId;
@@ -47,12 +43,15 @@ export async function getStats() {
       [carTypes.CAR]: 0,
     },
   );
+  
+ 
+  
   return {
     currentlyparked,
     todayCheckouts,
     totalvehicles,
-    todayCheckins,
-    accopyBYType,
+    // todayCheckins,
+    // accopyBYType,
   };
 }
 

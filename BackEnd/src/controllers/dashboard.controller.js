@@ -4,6 +4,7 @@ import { ApiError } from "../utils/errors.js";
 export async function getStats(req, res, next) {
   try {
     let stats = await dashboardService.getStats();
+    console.log(stats)
     if (!stats) {
       throw new ApiError(
         "Error while fetching stats",
@@ -11,6 +12,7 @@ export async function getStats(req, res, next) {
         "STATS_FETCH_ERROR",
       );
     }
+    console.log('stats')
     res.json({
       success: true,
       message: "stats get in",
@@ -22,10 +24,9 @@ export async function getStats(req, res, next) {
 }
 export async function getAllParked(req, res, next) {
   try {
-    console.log("Fetching all parked vehicles...");
     let parked = await dashboardService.getAllParked();
-    console.log("Parked vehicles fetched:", parked);
-    if (!parked || parked == [] || parked.length === 0) {
+    
+    if (!parked) {
       throw new ApiError(
         "Error while fetching parked vehicles",
         500,
