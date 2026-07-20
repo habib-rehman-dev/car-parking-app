@@ -1,3 +1,4 @@
+import { useState } from "react";
 import useGetActive from "../hooks/useGetAcitve";
 import { useCheckout } from "../hooks/useCheckout";
 import LoadingState from "../components/LoadingState";
@@ -6,11 +7,11 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import TwoWheelerIcon from "@mui/icons-material/TwoWheeler";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useState } from "react";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const StatusBadge = ({ status }) => (
   <span
-    className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize
+    className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize whitespace-nowrap
       ${
         status === "parked"
           ? "bg-emerald-500/20 text-emerald-300"
@@ -27,6 +28,19 @@ const VehicleTypeIcon = ({ type }) => {
   return <DirectionsCarIcon fontSize="small" className="text-white/40" />;
 };
 
+const CheckoutButton = ({ onClick, disabled, isLoading }) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30
+               text-red-300 text-xs font-medium rounded-lg border border-red-400/30
+               transition-all disabled:opacity-40 disabled:cursor-not-allowed w-full sm:w-auto"
+  >
+    <LogoutIcon sx={{ fontSize: 14 }} />
+    {isLoading ? "Checking out..." : "Checkout"}
+  </button>
+);
+
 const VehicleList = () => {
   const {
     data: allParked,
@@ -37,18 +51,13 @@ const VehicleList = () => {
   } = useGetActive();
 
   const checkoutMutation = useCheckout();
-
-  // track which specific row is being checked out, so only THAT row's
-  // button shows a loading state — not the whole table
   const [checkoutError, setCheckoutError] = useState(null);
 
   const handleCheckout = (session) => {
     const vehicle = session.vehicleId;
 
     if (!vehicle?.licencePlate) {
-      setCheckoutError(
-        "Cannot checkout — vehicle details missing for this session. Contact support."
-      );
+      setCheckoutError("Cannot checkout — vehicle details missing for this session. Contact support.");
       return;
     }
 
@@ -57,21 +66,17 @@ const VehicleList = () => {
       { licencePlate: vehicle.licencePlate },
       {
         onError: (error) => {
-          setCheckoutError(
-            error.response?.data?.message || "Checkout failed. Please try again."
-          );
+          setCheckoutError(error.response?.data?.message || "Checkout failed. Please try again.");
         },
       }
     );
   };
 
-  if (parkedLoading) {
-    return <LoadingState message="Loading vehicles..." />;
-  }
+  const isRowLoading = (vehicle) =>
+    checkoutMutation.isPending && checkoutMutation.variables?.licencePlate === vehicle?.licencePlate;
 
-  if (parkedError) {
-    return <ErrorState error={parkedErrorObj} onRetry={refetchParked} />;
-  }
+  if (parkedLoading) return <LoadingState message="Loading vehicles..." />;
+  if (parkedError) return <ErrorState error={parkedErrorObj} onRetry={refetchParked} />;
 
   if (!allParked || allParked.length === 0) {
     return (
@@ -89,8 +94,65 @@ const VehicleList = () => {
         </p>
       )}
 
-      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden">
-        <table className="w-full text-sm">
+      {/* ── MOBILE: stacked cards (below sm) ─────────────────────── */}
+      <div className="flex flex-col gap-3 sm:hidden">
+        {allParked.map((session) => {
+          const vehicle = session.vehicleId;
+          return (
+            <div
+              key={session._id}
+              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <VehicleTypeIcon type={vehicle?.type} />
+                  <div>
+                    <p className="text-white font-medium">
+                      {vehicle?.licencePlate || (
+                        <span className="text-white/40 italic text-sm">Unavailable</span>
+                      )}
+                    </p>
+                    <p className="text-white/40 text-xs capitalize">{vehicle?.type}</p>
+                  </div>
+                </div>
+                <StatusBadge status={session.status} />
+              </div>
+
+              {vehicle?.driverName && (
+                <div className="flex items-center gap-1.5 text-white/70 text-sm mb-1">
+                  <PersonIcon sx={{ fontSize: 14 }} className="text-white/40" />
+                  {vehicle.driverName} · {vehicle.phone}
+                </div>
+              )}
+
+              <div className="flex items-center gap-1.5 text-white/50 text-xs mb-3">
+                <AccessTimeIcon sx={{ fontSize: 14 }} />
+                In: {new Date(session.entryTime).toLocaleString()}
+                {session.exitTime && (
+                  <> · Out: {new Date(session.exitTime).toLocaleString()}</>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-white font-semibold">
+                  {session.fee !== null ? `$${session.fee}` : "—"}
+                </p>
+                {session.status === "parked" && (
+                  <CheckoutButton
+                    onClick={() => handleCheckout(session)}
+                    disabled={!vehicle?.licencePlate || isRowLoading(vehicle)}
+                    isLoading={isRowLoading(vehicle)}
+                  />
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── DESKTOP: table (sm and up) ────────────────────────────── */}
+      <div className="hidden sm:block bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-x-auto">
+        <table className="w-full text-sm min-w-[750px]">
           <thead>
             <tr className="text-white/60 text-left border-b border-white/10">
               <th className="px-5 py-3 font-medium">Vehicle</th>
@@ -105,12 +167,6 @@ const VehicleList = () => {
           <tbody>
             {allParked.map((session) => {
               const vehicle = session.vehicleId;
-
-              // is THIS row's checkout currently in flight?
-              const isThisRowLoading =
-                checkoutMutation.isPending &&
-                checkoutMutation.variables?.licencePlate === vehicle?.licencePlate;
-
               return (
                 <tr key={session._id} className="text-white/90 border-b border-white/5 last:border-0">
                   <td className="px-5 py-3">
@@ -141,11 +197,11 @@ const VehicleList = () => {
                     )}
                   </td>
 
-                  <td className="px-5 py-3">
+                  <td className="px-5 py-3 whitespace-nowrap">
                     {new Date(session.entryTime).toLocaleString()}
                   </td>
 
-                  <td className="px-5 py-3">
+                  <td className="px-5 py-3 whitespace-nowrap">
                     {session.exitTime ? (
                       new Date(session.exitTime).toLocaleString()
                     ) : (
@@ -163,16 +219,11 @@ const VehicleList = () => {
 
                   <td className="px-5 py-3">
                     {session.status === "parked" ? (
-                      <button
+                      <CheckoutButton
                         onClick={() => handleCheckout(session)}
-                        disabled={!vehicle?.licencePlate || isThisRowLoading}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30
-                                   text-red-300 text-xs font-medium rounded-lg border border-red-400/30
-                                   transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        <LogoutIcon sx={{ fontSize: 14 }} />
-                        {isThisRowLoading ? "Checking out..." : "Checkout"}
-                      </button>
+                        disabled={!vehicle?.licencePlate || isRowLoading(vehicle)}
+                        isLoading={isRowLoading(vehicle)}
+                      />
                     ) : (
                       <span className="text-white/30 text-xs">—</span>
                     )}

@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
 import Home from "../page/Home";
-import Register from "../features/dashboard/pages/Register";
 import Login from "../features/auth/pages/Login";
 import ProtectedRoute from "./Protect";
 import DashboardLayout from "../features/dashboard/DashboardLayout";
@@ -12,6 +11,7 @@ import CanNotAdminAccess from "../page/CanNotAdminAccess";
 import AdminRoute from "./AdminRout";
 import Checout from "../features/dashboard/pages/Checout";
 import SessionHistory from "../features/dashboard/pages/SessionHistory";
+import AddUser from "../features/dashboard/pages/Register";
 
 const AppRouter = () => {
   return (
@@ -37,10 +37,10 @@ const AppRouter = () => {
 
           {/* Admin-only — nested guard inside the already-logged-in guard */}
           <Route
-            path="register"
+            path="users/new"
             element={
               <AdminRoute>
-                <Register />
+                <AddUser />
               </AdminRoute>
             }
           />

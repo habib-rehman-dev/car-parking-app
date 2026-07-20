@@ -23,7 +23,9 @@ authRoutes.post(
 authRoutes.use(protect);
 
 // --- PROTECTED ROUTES ---
+
 authRoutes.get("/getme", auths.getme);
+authRoutes.get("/refresh", auths.refresh);
 authRoutes.get("/logout", auths.logout);
 
 export default authRoutes;
