@@ -14,7 +14,7 @@ authRoutes.post(
   
   validators.registerValidator,
   expressValidator,
-  auths.register,
+  auths.register, 
 ); 
 // what i do 
 
