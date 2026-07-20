@@ -4,7 +4,7 @@ import connectDB from './src/config/dbConnect.js';
 
 const PORT = process.env.PORT || 5000;
 
-async function startServer() {
+export async function startServer() {
   try {
     // 1. Wait for MongoDB to connect first
     await connectDB();

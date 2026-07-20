@@ -100,7 +100,7 @@ const VehicleList = () => {
 
       {/* ── DESKTOP: table (sm and up) ────────────────────────────── */}
       <div className="hidden sm:block bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-x-auto">
-        <table className="w-full text-sm min-w-[650px]">
+        <table className="w-full text-sm min-w-162.5">
           <thead>
             <tr className="text-white/60 text-left border-b border-white/10">
               <th className="px-5 py-3 font-medium">Vehicle</th>
