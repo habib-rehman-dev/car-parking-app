@@ -7,18 +7,34 @@ node_modules/
 dist/
 build/
 __files/
+
 # Local Environment Variables / Secrets (NEVER upload these!)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+*.env
 
 # Debug / Log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+logs/
+*.log
 
 # System Files (Mac/Windows background clutter)
 .DS_Store
 Thumbs.db
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+
+# Vercel
+.vercel
+
+# Package manager lock conflicts (optional — keep if you switch between npm/yarn)
+# package-lock.json
+# yarn.lock
