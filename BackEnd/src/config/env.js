@@ -2,23 +2,23 @@ import { configDotenv } from "dotenv";
 
 configDotenv();
 
-const requiredEnvVars = [
-  "MONGO_URI",
-  "ACCESS_SECRET",
-  "REFRESH_SECRET",
-  "COOKIE_SECRET",
-  "CLIENT_URL",
-  "PORT",
-];
+// const requiredEnvVars = [
+//   "MONGO_URI",
+//   "ACCESS_SECRET",
+//   "REFRESH_SECRET",
+//   "COOKIE_SECRET",
+//   "CLIENT_URL",
+//   "PORT",
+// ];
 
 // will throegh eroor over here
-requiredEnvVars.forEach((envVar) => {
-  if (!process.env[envVar]) {
-    throw new Error(
-      `[Config Error]: Missing required environment variable in .env: ${envVar}`,
-    );
-  }
-});
+// requiredEnvVars.forEach((envVar) => {
+//   if (!process.env[envVar]) {
+//     throw new Error(
+//       `[Config Error]: Missing required environment variable in .env: ${envVar}`,
+//     );
+//   }
+// });
 
 // for the production i will use this cases not for now
 

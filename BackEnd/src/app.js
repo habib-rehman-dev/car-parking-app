@@ -5,6 +5,7 @@ import helmet from "./config/helmet.js";
 import cors from "./config/cors.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import "./config/env.js";
+import connectDB from "./config/dbConnect.js";
 
 const app = express();
 
@@ -24,5 +25,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(errorHandler);
+
+connectDB()
 
 export default app;

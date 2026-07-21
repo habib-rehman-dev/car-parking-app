@@ -1,7 +1,8 @@
 import app from "../src/app.js";
-import connectDB from "../src/config/dbConnect";
 import '../src/config/env.js'
 
+console.log(
+    '\n\n\n\n\n'+process.env.MONGO_URI+ 'urliiii'+'\n\n\n\n\n')
 
-connectDB()
+
 export default app
