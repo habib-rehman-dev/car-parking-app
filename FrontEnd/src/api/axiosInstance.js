@@ -8,7 +8,7 @@ const configuredApiUrl = import.meta.env.VITE_API_URL;
 const apiOrigin = configuredApiUrl
   ?.replace(/\/+$/, "")
   .replace(/\/api\/v1$/, ""); 
-
+console.log(apiOrigin)
 const axiosInstance = axios.create({
   baseURL: apiOrigin ? `${apiOrigin}/api/v1` : "http://localhost:3001/api/v1",
   timeout: 10000,
@@ -20,7 +20,10 @@ const axiosInstance = axios.create({
 
 // ─── REQUEST INTERCEPTOR ──────────────────────────────────────────────────
 axiosInstance.interceptors.request.use(
-  (config) => config,
+  (config) =>{
+    console.log('request go')
+    return config
+  },
   (error) => Promise.reject(error),
 );
 
