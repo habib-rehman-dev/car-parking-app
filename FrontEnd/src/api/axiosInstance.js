@@ -7,7 +7,7 @@ import axios from "axios";
 const configuredApiUrl = import.meta.env.VITE_API_URL;
 const apiOrigin = configuredApiUrl
   ?.replace(/\/+$/, "")
-  .replace(/\/api\/v1$/, "");
+  .replace(/\/api\/v1$/, ""); 
 
 const axiosInstance = axios.create({
   baseURL: apiOrigin ? `${apiOrigin}/api/v1` : "http://localhost:3001/api/v1",
