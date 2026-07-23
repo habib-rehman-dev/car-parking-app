@@ -1,12 +1,16 @@
 // api/axiosInstance.js
 import axios from "axios";
 // import toast from "react-hot-toast";
-let route = import.meta.env.VITE_API_URL+'/api/v1' || "http://localhost:3001/api/v1";
-  console.log(route)
+
+// Accept either the backend origin or an already versioned API URL from Vercel
+// and always produce one canonical URL (without a `//api/v1` redirect).
+const configuredApiUrl = import.meta.env.VITE_API_URL;
+const apiOrigin = configuredApiUrl
+  ?.replace(/\/+$/, "")
+  .replace(/\/api\/v1$/, "");
+
 const axiosInstance = axios.create({
-  // Keep the API version in one place. Set VITE_API_URL in Vercel to the
-  // deployed backend URL, including `/api/v1`.
-  baseURL: import.meta.env.VITE_API_URL+'/api/v1' || "http://localhost:3001/api/v1",
+  baseURL: apiOrigin ? `${apiOrigin}/api/v1` : "http://localhost:3001/api/v1",
   timeout: 10000,
   withCredentials: true,
   headers: {
