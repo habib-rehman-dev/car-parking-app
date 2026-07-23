@@ -30,7 +30,7 @@ import { ApiError, AuthenticationError } from "../utils/errors.js";
 
 export async function login({ email, password }) {
   let user = await User.findOne({email});
-  
+  console.log('login 1')
   if (!user || (await user.matchpassword(password)) === false) {
     throw new AuthenticationError("Invalid Credentials");
   }

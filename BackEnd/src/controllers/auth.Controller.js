@@ -13,7 +13,7 @@ const cookieOptions = {
 export const login = async (req, res, next) => {
   try {
     let { accessToken ,refreshToken, result } = await authService.login(req.body, res);
-
+    console.log('login -----')
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,
       maxAge: 15 * 60 * 1000,
