@@ -1,31 +1,44 @@
 import mongoose from "mongoose";
 
-let isConnected = false;
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  throw new Error("MONGO_URI is not defined in your environment variables!");
+}
+
+// Global cache across serverless function re-uses
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
 async function connectDB() {
-  if (isConnected) {
-    console.log("Using existing MongoDB connection.");
-    return;
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      dbName: "Parking",
+      bufferCommands: false, // Prevents queries from hanging when disconnected
+      serverSelectionTimeoutMS: 10000,
+    };
+
+    cached.promise = mongoose.connect(MONGO_URI, opts).then((mongooseInstance) => {
+      return mongooseInstance;
+    });
   }
 
   try {
-    const mongoUri = process.env.MONGO_URI;
-   console.log(mongoUri)
-    if (!mongoUri) {
-      throw new Error("MONGO_URI is not defined in your environment variables!");
-    }
-
-    const db = await mongoose.connect(mongoUri, {
-      dbName: "Parking",
-      serverSelectionTimeoutMS: 10000,
-    });
-
-    isConnected = db.connections[0].readyState === 1;
-    console.log("MongoDB connected successfully.");
+    cached.conn = await cached.promise;
   } catch (error) {
-    console.error("MongoDB connection failed:", );
-    console.log(error)
+    cached.promise = null; // Reset promise on failure so next request retries
+    console.error("MongoDB connection error:", error);
+    throw error;
   }
+
+  return cached.conn;
 }
 
 export default connectDB;
