@@ -9,5 +9,5 @@ export const expressValidator = (req, res, next) => {
    throw new ValidationError(errors_);
   }
   console.log('validation passed')
-  next();
+ return next();
 };
