@@ -5,7 +5,7 @@ import axios from "axios";
 const axiosInstance = axios.create({
   // Keep the API version in one place. Set VITE_API_URL in Vercel to the
   // deployed backend URL, including `/api/v1`.
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3001/api/v1",
+  baseURL: import.meta.env.VITE_API_URL+'/api/v1' || "http://localhost:3001/api/v1",
   timeout: 10000,
   withCredentials: true,
   headers: {
