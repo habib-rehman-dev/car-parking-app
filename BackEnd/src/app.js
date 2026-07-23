@@ -24,6 +24,16 @@ app.get("/", (req, res) => {
   res.status(200).json({ message: "API is healthy" });
 });
 
+// Make unmatched URLs visible in Vercel function logs instead of falling
+// through Express' default 404 response silently.
+app.use((req, res) => {
+  console.warn(`Route not found: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({
+    success: false,
+    error: { message: "Route not found", code: "NOT_FOUND" },
+  });
+});
+
 app.use(errorHandler);
 
 connectDB()
