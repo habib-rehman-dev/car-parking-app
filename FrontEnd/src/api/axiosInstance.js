@@ -1,7 +1,8 @@
 // api/axiosInstance.js
 import axios from "axios";
 // import toast from "react-hot-toast";
-
+let route = import.meta.env.VITE_API_URL+'/api/v1' || "http://localhost:3001/api/v1",
+  console.log(route)
 const axiosInstance = axios.create({
   // Keep the API version in one place. Set VITE_API_URL in Vercel to the
   // deployed backend URL, including `/api/v1`.
