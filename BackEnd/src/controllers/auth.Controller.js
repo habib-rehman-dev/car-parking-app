@@ -13,7 +13,7 @@ const cookieOptions = {
 export const login = async (req, res, next) => {
   try {
     console.log('login ----')
-    console.log(req.body)
+    console.log('req.body')
     let { accessToken ,refreshToken, result } = await authService.login(req.body);
     console.log('login -----')
     res.cookie("accessToken", accessToken, {
