@@ -1,4 +1,4 @@
-import connectDB from "../config/dbConnect";
+import connectDB from "../config/dbConnect.js";
 
 export const ensureDbConnected = async (req, res, next) => {
   try {
