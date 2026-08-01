@@ -16,14 +16,15 @@ export const login = async (req, res, next) => {
    
     let { accessToken ,refreshToken, result } = await authService.login(req.body);
      console.log(accessToken , refreshToken , result)
-    res.cookie("accessToken", accessToken, {
-      ...cookieOptions,
-      maxAge: 15 * 60 * 1000,
-    });
-    res.cookie("refreshToken", refreshToken, {
-      ...cookieOptions,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+   res.cookie("accessToken", accessToken, {
+  ...cookieOptions,
+  maxAge: 15 * 60 * 1000,
+});
+
+res.cookie("refreshToken", refreshToken, {
+  ...cookieOptions,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
     console.log('till this place everything is fine')
     res.json(result);
   } catch (err) {
