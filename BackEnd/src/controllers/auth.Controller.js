@@ -24,7 +24,7 @@ export const login = async (req, res, next) => {
       ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    console.log(result)
+    console.log('till this place everything is fine')
     res.json(result);
   } catch (err) {
     next(err);
