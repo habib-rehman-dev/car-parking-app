@@ -2,11 +2,13 @@ import jwt from "jsonwebtoken";
 import User from "../model/User.model.js";
 import { ApiError, AuthenticationError } from "../utils/errors.js";
 
-
-  
-  const generateTokens = (userId) => {
-  const accessToken = jwt.sign({ userId }, process.env.ACCESS_SECRET, { expiresIn: "15m" });
-  const refreshToken = jwt.sign({ userId }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
+const generateTokens = (userId) => {
+  const accessToken = jwt.sign({ userId }, process.env.ACCESS_SECRET, {
+    expiresIn: "15m",
+  });
+  const refreshToken = jwt.sign({ userId }, process.env.REFRESH_SECRET, {
+    expiresIn: "7d",
+  });
   return { accessToken, refreshToken };
 };
 
@@ -24,20 +26,17 @@ import { ApiError, AuthenticationError } from "../utils/errors.js";
 //   }
 // };
 
-
-
-
-
 export async function login({ email, password }) {
-  let user = await User.findOne({email});
-  console.log('login 1')
+  let user = await User.findOne({ email });
+  console.log(user);
   if (!user || (await user.matchpassword(password)) === false) {
     throw new AuthenticationError("Invalid Credentials");
   }
   const { accessToken, refreshToken } = generateTokens(user._id);
 
   return {
-     accessToken, refreshToken ,
+    accessToken,
+    refreshToken,
     result: {
       user: user,
       message: "you loged in successfuly",
@@ -47,21 +46,23 @@ export async function login({ email, password }) {
 }
 
 export async function register({ email, password, role }) {
-
   let isExist = await User.findOne({ email });
 
-  if (isExist){
-
-    throw new ApiError("user is already exist with the same email" , 409 , "USER_ALREADY_EXIST");
+  if (isExist) {
+    throw new ApiError(
+      "user is already exist with the same email",
+      409,
+      "USER_ALREADY_EXIST",
+    );
   }
-  console.log(isExist)
+  console.log(isExist);
   let user = await User.create({
     email: email,
     password: password,
     role: role,
   });
   if (!user) throw new Error("sorry sth went wrong");
-  
+
   return {
     message: "user created succsfully",
     success: true,
