@@ -32,10 +32,14 @@ async function connectDB() {
 
   try {
     cached.conn = await cached.promise;
+    console.log("\n\n\n MongoDB connected successfully.");
   } catch (error) {
     cached.promise = null; // Reset promise on failure so next request retries
     console.error("MongoDB connection error:", error);
     throw error;
+  }finally {
+    console.log("MongoDB connection attempt finished.");
+
   }
 
   return cached.conn;
