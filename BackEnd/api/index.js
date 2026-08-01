@@ -1,8 +1,8 @@
-import app from "../src/app.js";
-import '../src/config/env.js'
+// api/index.js
+import app from '../src/app.js';
+import connectDB from '../src/config/dbConnect.js';
 
-console.log(
-    '\n\n\n\n\n'+process.env.MONGO_URI+ 'urliiii'+'\n\n\n\n\n')
+// Connect DB once when serverless function warms up
+connectDB().catch(err => console.error("MongoDB Connection Error:", err));
 
-
-export default app
+export default app;

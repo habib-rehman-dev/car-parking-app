@@ -36,6 +36,6 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-connectDB()
+// connectDB()
 
 export default app;
