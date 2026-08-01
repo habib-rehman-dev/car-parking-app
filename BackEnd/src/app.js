@@ -1,6 +1,6 @@
 import express from "express";
 import router from "./routes/index.js";
-import cookieConfig from "./config/cookie.js";
+import {cookieConfig} from "./config/cookie.js";
 import helmet from "./config/helmet.js";
 import cors from "./config/cors.js";
 import errorHandler from "./middlewares/error.middleware.js";
