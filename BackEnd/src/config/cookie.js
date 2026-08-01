@@ -1,18 +1,16 @@
 import cookieParser from "cookie-parser";
-import "./env.js";
-// src/config/cookie.js (or wherever cookieOptions is defined)
-const isProduction = process.env.NODE_ENV === "production" || true; // Adjust this based on your deployment environment
 
+// 1. Export the middleware for app.use(cookieParserMiddleware)
+export const cookieParserMiddleware = cookieParser();
 
-// {
-//   httpOnly: true,       // Protects against XSS attacks
-//   secure: true,         // REQUIRED on HTTPS (Vercel) when sameSite is 'none'
-//   sameSite: "none",     // REQUIRED for cross-origin requests (localhost -> Vercel or Vercel -> Vercel)
-//   path: "/",
-// };
-export default cookieParser({
-  httpOnly: true, // Prevents XSS attacks (JavaScript cannot read cookie)
-  secure: isProduction, // MUST be true in production (requires HTTPS)
-  sameSite: isProduction ? "none" : "lax", // MUST be "none" for cross-origin frontend/backend!
+// 2. Export the cookie options object to use in res.cookie("token", val, cookieOptions)
+const isProduction = process.env.NODE_ENV === "production" || true; // Set true for Vercel
+
+export const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction, // MUST be true when sameSite is 'none'
+  sameSite: isProduction ? "none" : "lax",
   path: "/",
-})
+};
+
+
