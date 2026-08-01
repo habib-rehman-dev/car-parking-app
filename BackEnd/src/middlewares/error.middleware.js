@@ -3,6 +3,7 @@
 import { ApiError } from "../utils/errors.js";
 
 const errorHandler = (err, req, res, next) => {
+  console.log("Error Handler Invoked:", err);
   if (res.headersSent) {
     return next();
   }

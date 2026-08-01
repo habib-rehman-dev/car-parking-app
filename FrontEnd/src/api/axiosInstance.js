@@ -4,7 +4,7 @@ import axios from "axios";
 
 // Accept either the backend origin or an already versioned API URL from Vercel
 // and always produce one canonical URL (without a `//api/v1` redirect).
-const configuredApiUrl = import.meta.env.VITE_API_URL;
+const configuredApiUrl = 'https://car-parking-app-xi.vercel.app/';
 const apiOrigin = configuredApiUrl
   ?.replace(/\/+$/, "")
   .replace(/\/api\/v1$/, ""); 
