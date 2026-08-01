@@ -6,6 +6,7 @@ import cors from "./config/cors.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import "./config/env.js";
 import connectDB from "./config/dbConnect.js";
+import { ensureDbConnected } from "./middlewares/db.middlerware.js";
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(
   cookieConfig,
   helmet,
 );
-
+app.use(ensureDbConnected); // Ensure DB connection for every request
 app.use("/api/v1", router);
 
 app.get("/", (req, res) => {
@@ -33,6 +34,9 @@ app.use((req, res) => {
     error: { message: "Route not found", code: "NOT_FOUND" },
   });
 });
+
+
+
 
 app.use(errorHandler);
 
