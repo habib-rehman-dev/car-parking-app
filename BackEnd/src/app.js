@@ -1,6 +1,6 @@
 import express from "express";
 import router from "./routes/index.js";
-import {cookieConfig} from "./config/cookie.js";
+import {cookieParserMiddleware} from "./config/cookie.js";
 import helmet from "./config/helmet.js";
 import cors from "./config/cors.js";
 import errorHandler from "./middlewares/error.middleware.js";
@@ -14,7 +14,7 @@ app.use(
   express.json(),
   express.urlencoded({ extended: true }),
   cors,
-  cookieConfig,
+  cookieParserMiddleware,
   helmet,
 );
 app.use(ensureDbConnected); // Ensure DB connection for every request
