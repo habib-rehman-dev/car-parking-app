@@ -15,7 +15,7 @@ export const login = async (req, res, next) => {
    
    
     let { accessToken ,refreshToken, result } = await authService.login(req.body);
-    console.log('login -----')
+     console.log(accessToken , refreshToken , result)
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,
       maxAge: 15 * 60 * 1000,
@@ -24,7 +24,7 @@ export const login = async (req, res, next) => {
       ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-
+    console.log(result)
     res.json(result);
   } catch (err) {
     next(err);
