@@ -6,7 +6,7 @@ export default async function protect(req, res, next){
     try{
 
         let token = req.cookies.accessToken
-       
+       console.log('token from cookies' , token)
         if(!token) {
             throw new AuthenticationError('unauthorized')
         }
