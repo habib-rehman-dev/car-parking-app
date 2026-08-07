@@ -24,7 +24,7 @@ const Login = () => {
                    rounded-2xl"
       >
         <h2 className="text-2xl font-bold text-white text-center mb-1">Welcome Back</h2>
-        <p className="text-center w-full color-red-600 font-bold">This is for Demo just.</p>
+        <p className="text-center w-full text-red-600 font-bold">This is for Demo just.</p>
         <p className="text-white/70 text-center text-sm mb-6">Login to your account</p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
