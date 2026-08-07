@@ -4,8 +4,8 @@ import useLogin from "../hooks/useLogin";
 
 const Login = () => {
   const loginMutation = useLogin();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("habib-dev@gmail.com");
+  const [password, setPassword] = useState("Z8UhM2Lq6GHud8K");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,6 +24,7 @@ const Login = () => {
                    rounded-2xl"
       >
         <h2 className="text-2xl font-bold text-white text-center mb-1">Welcome Back</h2>
+        <p>This is for Demo just.</p>
         <p className="text-white/70 text-center text-sm mb-6">Login to your account</p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
